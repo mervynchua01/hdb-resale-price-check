@@ -1,12 +1,24 @@
 import { useState } from "react";
+import {useNavigate} from "react-router-dom"
 import TownDropdown from "./components/TownDropdown";
 import FlatTypeDropdown from "./components/FlatTypeDropdown";
 import BudgetDropdown from "./components/BudgetDropdown";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
+
+
 
 export default function LandingPage() {
   const [selectedTown, setSelectedTown] = useState(null);
   const [selectedFlatTypes, setSelectedFlatTypes] = useState([]);
   const [priceRange, setPriceRange] = useState([200000, 1500000]);
+  const navigate = useNavigate();
+
+function handleSearch() {
+  navigate(
+    `/listings?town=${selectedTown}&minPrice=${priceRange[0]}&maxPrice=${priceRange[1]}&flatTypes=${selectedFlatTypes.join(",")}`,
+  );
+}
 
   return (
     <>
@@ -23,7 +35,13 @@ export default function LandingPage() {
         />
 
         <BudgetDropdown priceRange={priceRange} setPriceRange={setPriceRange} />
-        <button>Search</button>
+        <IconButton
+          onClick={handleSearch}
+          aria-label="search"
+          sx={{ backgroundColor: "#008188", color: "white" }}
+        >
+          <SearchIcon />
+        </IconButton>
       </div>
     </>
   );

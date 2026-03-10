@@ -1,8 +1,7 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage/LandingPage";
-// import LandingPage from "./pages/LandingPage";
-// import ListingsPage from "./pages/ListingsPage";
+import ListingsPage from "./pages/ListingsPage/ListingsPage";
 // import ShortlistPage from "./pages/ShortlistPage";
 
 
@@ -12,6 +11,7 @@ const App = () => {
     <>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/listings" element={<ListingsPage />} />
       </Routes>
     </>
   );
