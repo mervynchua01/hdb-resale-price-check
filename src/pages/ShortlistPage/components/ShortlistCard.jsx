@@ -3,26 +3,13 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import Divider from "@mui/material/Divider";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 
-export default function ListingsCard({ flat, shortlist, onAdd, onRemove }) {
-  const pricePerSqm = Math.round(flat.resale_price / flat.floor_area_sqm);
-  const shortlistedRecord = shortlist.find(
-    (record) => String(record.fields.Vault_Id) === String(flat._id),
+export default function ShortlistCard({ record, onRemove }) {
+  const pricePerSqm = Math.round(
+    record.fields.Resale_Price / record.fields["Floor Area Sqm"],
   );
-  const isShortlisted = shortlistedRecord !== undefined;
-
-  const recordId = shortlistedRecord?.id;
-
-  function handleHeartClick() {
-    if (isShortlisted) {
-      onRemove(recordId);
-    } else {
-      onAdd(flat);
-    }
-  }
 
   return (
     <Card
@@ -44,18 +31,18 @@ export default function ListingsCard({ flat, shortlist, onAdd, onRemove }) {
         }}
       >
         <Typography variant="subtitle1" fontWeight={700}>
-          {flat.town} · {flat.flat_type}
+          {record.fields.Town} · {record.fields.Flat_Type}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {flat.block} {flat.street_name}
-        </Typography>
-
-        <Typography variant="body2" color="text.secondary">
-          {flat.storey_range} · {flat.floor_area_sqm} sqm
+          {record.fields.Block} {record.fields.Street_Name}
         </Typography>
 
         <Typography variant="body2" color="text.secondary">
-          {flat.remaining_lease}
+          {record.fields.Storey_Range} · {record.fields["Floor Area Sqm"]} sqm
+        </Typography>
+
+        <Typography variant="body2" color="text.secondary">
+          {record.fields.Remaining_Lease}
         </Typography>
 
         <Divider sx={{ my: 1 }} />
@@ -65,17 +52,13 @@ export default function ListingsCard({ flat, shortlist, onAdd, onRemove }) {
         </Typography>
 
         <Typography variant="h6" fontWeight={800} sx={{ lineHeight: 1.1 }}>
-          S${Number(flat.resale_price).toLocaleString()}
+          S${Number(record.fields.Resale_Price).toLocaleString()}
         </Typography>
       </CardContent>
 
       <CardActions sx={{ justifyContent: "flex-end", pt: 0 }}>
-        <IconButton onClick={handleHeartClick}>
-          {isShortlisted ? (
-            <FavoriteIcon sx={{ color: "#e11d48" }} />
-          ) : (
-            <FavoriteBorderIcon />
-          )}
+        <IconButton onClick={() => onRemove(record.id)}>
+          <DeleteIcon />
         </IconButton>
       </CardActions>
     </Card>

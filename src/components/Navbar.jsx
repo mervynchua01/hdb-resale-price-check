@@ -1,16 +1,20 @@
 import { Link } from "react-router-dom";
+import "./Navbar.css";
 
 const NavBar = () => {
   return (
-    <nav>
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/">Listing</Link>
-        </li>
-      </ul>
+    <nav className="navbar">
+      <Link to="/" className="navbar-logo">
+        FlatFinder SG
+      </Link>
+      <div className="navbar-links">
+        <Link to="/listings" className="navbar-link">
+          All Listings
+        </Link>
+        <Link to="/shortlist" className="navbar-link navbar-link-saved">
+          Saved
+        </Link>
+      </div>
     </nav>
   );
 };

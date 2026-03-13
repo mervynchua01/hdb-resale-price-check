@@ -2,22 +2,21 @@ const AIRTABLE_API_KEY = import.meta.env.VITE_AIRTABLE_API_KEY;
 const AIRTABLE_BASE_ID = import.meta.env.VITE_AIRTABLE_BASE_ID;
 const AIRTABLE_TABLE_NAME = "Table 1";
 
-export async function fetchListings() {
+export async function fetchListings(town, offset = 0) {
   const datasetId = "d_8b84c4ee58e3cfc0ece0d773c8ca6abc";
-  const response = await fetch(
-    `https://api-production.data.gov.sg/v2/public/api/datasets/${datasetId}/list-rows`,
-    {
-      method: "GET",
-      headers: {
-        Accept: "*/*",
-      },
+  const url = town
+    ? `https://data.gov.sg/api/action/datastore_search?resource_id=${datasetId}&filters=${encodeURIComponent(JSON.stringify({ town }))}&limit=20&offset=${offset}`
+    : `https://data.gov.sg/api/action/datastore_search?resource_id=${datasetId}&limit=20&offset=${offset}`;
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "x-api-key": import.meta.env.VITE_API_KEY,
     },
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch listings");
-  }
+  });
+  if (!response.ok) throw new Error("Failed to fetch listings");
   const data = await response.json();
-  return data.data.rows;
+  return data.result.records;
 }
 
 export async function getShortlist() {
@@ -47,7 +46,7 @@ export async function addToShortlist(flat) {
       records: [
         {
           fields: {
-            Vault_Id: flat.vault_id,
+            Vault_Id: flat._id,
             Town: flat.town,
             Flat_Type: flat.flat_type,
             Block: flat.block,
@@ -57,7 +56,6 @@ export async function addToShortlist(flat) {
             Remaining_Lease: flat.remaining_lease,
             Resale_Price: parseFloat(flat.resale_price),
             Month: flat.month,
-            
           },
         },
       ],
